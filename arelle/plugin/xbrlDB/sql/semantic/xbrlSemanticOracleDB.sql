@@ -499,13 +499,13 @@ UNION ALL SELECT 132, 'NAICS', 21, 'Mining, Quarrying, and Oil and Gas Extractio
 UNION ALL SELECT 98, 'NAICS', 113, 'Forestry and Logging', 2, 1 FROM dual
 UNION ALL SELECT 180, 'NAICS', 22, 'Utilities', 1, NULL FROM dual
 UNION ALL SELECT 205, 'NAICS', 23, 'Construction', 1, NULL FROM dual
-UNION ALL SELECT 278, 'NAICS', 31, 'Manufacturing', 4, NULL FROM dual
+UNION ALL SELECT 278, 'NAICS', 31, 'Manufacturing', 1, NULL FROM dual
 UNION ALL SELECT 572, 'NAICS', 327, 'Nonmetallic Mineral Product Manufacturing', 2, 278 FROM dual
 UNION ALL SELECT 700, 'NAICS', 333, 'Machinery Manufacturing', 2, 278 FROM dual
 UNION ALL SELECT 930, 'NAICS', 42, 'Wholesale Trade', 1, NULL FROM dual
-UNION ALL SELECT 1095, 'NAICS', 44, 'Retail Trade', 4, NULL FROM dual
+UNION ALL SELECT 1095, 'NAICS', 44, 'Retail Trade', 1, NULL FROM dual
 UNION ALL SELECT 1194, 'NAICS', 4482, 'Shoe Stores', 3, 1180 FROM dual
-UNION ALL SELECT 1262, 'NAICS', 48, 'Transportation and Warehousing', 4, NULL FROM dual
+UNION ALL SELECT 1262, 'NAICS', 48, 'Transportation and Warehousing', 1, NULL FROM dual
 UNION ALL SELECT 1273, 'NAICS', 482, 'Rail Transportation', 2, 1262 FROM dual
 UNION ALL SELECT 1402, 'NAICS', 51, 'Information', 1, NULL FROM dual
 UNION ALL SELECT 1480, 'NAICS', 52, 'Finance and Insurance', 1, NULL FROM dual
