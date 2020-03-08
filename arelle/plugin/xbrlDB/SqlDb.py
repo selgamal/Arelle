@@ -394,10 +394,27 @@ class SqlDbConnection():
             # separate dollar-quoted bodies and statement lines
             sqlstatements = []
             def findstatements(start, end, laststatement):
-                for line in sql[start:end].split('\n'):
+
+                # Do not terminate statement with ";" if within BEGIN END BLOCK
+                beginEndBlocks_ = 0  # Tracks BEGIN END blocks
+                sqlLines_ = sql[start:end].split('\n')
+                for line in sqlLines_:
+                    # Account for blocks and nested blocks
+                    if re.search(r'\bBEGIN\b', line.strip(), re.IGNORECASE):
+                        beginEndBlocks_ += 1
+                    if re.search(r'\bEND\b', line.strip(), re.IGNORECASE) and beginEndBlocks_ > 0:
+                        beginEndBlocks_ -= 1
                     stmt, comment1, comment2 = line.partition("--")
                     laststatement += stmt + '\n'
-                    if ';' in stmt:
+                    if not beginEndBlocks_ and ';' in stmt:
+                        if self.product == 'orcl':
+                            # cx_Oracle complains about the "/" and ";" at end of statements
+                            # in case of triggers => ";"  is needed for oracle to compile the trigger
+                            if re.search('CREATE TRIGGER', laststatement, re.IGNORECASE):
+                                laststatement = re.sub('^/', '', laststatement)
+                            else:
+                                # Otherwise both "/" and ";" are removed
+                                laststatement = re.sub('^/|;$', '', laststatement)
                         sqlstatements.append(laststatement)
                         laststatement = ''
                 return laststatement
