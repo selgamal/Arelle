@@ -446,7 +446,7 @@ def checkfile(modelXbrl, filepath):
         while True:
             line = f.readline()
             if line == "":
-                break;
+                break
             # check for disallowed characters or entity codes
             for match in docCheckPattern.finditer(line):
                 text = match.group()

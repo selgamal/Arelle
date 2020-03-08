@@ -432,7 +432,8 @@ class SqlDbConnection():
                 if any(cmd in sql
                        for cmd in ('CREATE TABLE', 'CREATE SEQUENCE', 'INSERT INTO', 'CREATE TYPE',
                                    'CREATE FUNCTION', 
-                                   'DROP'
+                                   # comma after 'DROP' and add 'CREATE TRIGGER'
+                                   'DROP', 'CREATE TRIGGER',
                                    'SET',
                                    'CREATE INDEX', 'CREATE UNIQUE INDEX', # 'ALTER TABLE ONLY'
                                    'CREATE VIEW', 'CREATE OR REPLACE VIEW', 'CREATE MATERIALIZED VIEW'
