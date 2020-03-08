@@ -165,9 +165,11 @@ class SqlDbConnection():
             if not hasOracle:
                 raise XPDBException("xpgDB:MissingOracleInterface",
                                     _("Oracle interface is not installed")) 
-            self.conn = oracleConnect('{}/{}@{}{}'
+            
+            # Oracle connection string missing database
+            self.conn = oracleConnect('{}/{}@{}{}/{}'
                                             .format(user, password, host, 
-                                                    ":{}".format(port) if port else ""))
+                                                    ":{}".format(port) if port else "", database))
             # self.conn.paramstyle = 'named'
             self.product = product
         elif product == "mssql":
@@ -311,7 +313,9 @@ class SqlDbConnection():
             some databases require locks per operation (such as MySQL), when isSessionTransaction=False
         '''
         if self.product in ("postgres", "orcl") and isSessionTransaction:
-            result = self.execute('LOCK {} IN SHARE ROW EXCLUSIVE MODE'.format(', '.join(tableNames)),
+            # Quoted table names - works for both postgres and orcl
+            _tableNames = ', '.join('"{0}"'.format(t) for t in tableNames)
+            result = self.execute('LOCK TABLE {} IN SHARE ROW EXCLUSIVE MODE'.format(_tableNames),
                                   close=False, commit=False, fetch=False, action="locking table")
         elif self.product in ("mysql",):
             result = self.execute('LOCK TABLES {}'
@@ -503,7 +507,9 @@ class SqlDbConnection():
                        self.execute({"postgres":"SELECT c.relname FROM pg_class c WHERE c.relkind = 'S';",
                                      "mysql": "SHOW triggers;",
                                      "mssql": "SELECT name FROM sys.triggers;",
-                                     "orcl": "SHOW trigger_name FROM user_triggers"\
+                                    #  "orcl": "SHOW trigger_name FROM user_triggers"\
+                                    # 'SHOW' doesn't work in oracle
+                                    "orcl": "SELECT trigger_name FROM user_triggers"\
                                      }[self.product]))
         except KeyError:
             return set()
