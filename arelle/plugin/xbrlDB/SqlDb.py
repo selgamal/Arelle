@@ -156,7 +156,7 @@ class SqlDbConnection():
                 raise XPDBException("xpgDB:MissingMySQLInterface",
                                     _("MySQL interface is not installed")) 
             self.conn = mysqlConnect(user=user, passwd=password, host=host, 
-                                     port=int(port or 5432), 
+                                     port=int(port or 3306), 
                                      db=database,  # pymysql takes database or db but MySQLdb only takes db 
                                      connect_timeout=timeout or 60,
                                      charset='utf8')
@@ -399,6 +399,20 @@ class SqlDbConnection():
             # SQL server complains about 'GO' statement (SSMS artifact)
             if self.product == 'mssql':
                 sql = sql.replace('\nGO\n', '\n')
+                
+            # pymysql complains about 'DELIMITER' 
+            # https://github.com/PyMySQL/mysqlclient-python/issues/64#issuecomment-160226330
+            # The next few lines try to remove 'DELIMITER' and the assigned delimiters from ddl
+            if self.product == 'mysql':
+                # Get all assigned delimiters
+                delimiters = [x.strip() for x in re.findall('DELIMITER(.*)', sql)]
+                # Exclude default delimiter to be used later in determining statement end
+                delimitersExclude = set([x for x in delimiters if not ';' in x])
+                # build regex to detect delimiter instruction
+                delimiter = '|'.join(set(delimiters))
+                subRegex = re.compile(r'\nDELIMITER\s+('+ delimiter + ')|' + '|'.join(delimitersExclude))
+                # Remove delimiter instruction and actual assigned delimiter from ddl
+                sql = subRegex.sub('', sql)
             # separate dollar-quoted bodies and statement lines
             sqlstatements = []
             def findstatements(start, end, laststatement):
