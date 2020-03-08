@@ -227,7 +227,7 @@ class XbrlSqlDatabaseConnection(SqlDbConnection):
                                                for resource in (rel.fromModelObject, rel.toModelObject)):
                         hasResource = True
                     if inInstance and hasResource:
-                        break;
+                        break
                 self.arcroleInInstance[arcrole] = inInstance
                 self.arcroleHasResource[arcrole] = hasResource
                 

@@ -39,7 +39,7 @@ import os, io, time, json, socket, logging, zlib, datetime
 from arelle.ModelDtsObject import ModelConcept, ModelResource, ModelRelationship
 from arelle.ModelInstanceObject import ModelFact
 from arelle.ModelDocument import Type
-from arelle import XbrlConst, XmlUtil, UrlUtil
+from arelle import XbrlConst, XmlUtil, UrlUtil, ModelValue
 import urllib.request
 from urllib.error import HTTPError, URLError
 from lxml import etree
@@ -130,6 +130,17 @@ def jsonDefaultEncoder(obj):
         return float(obj)
     elif isinstance(obj, (datetime.date, datetime.datetime)):
         return XmlUtil.dateunionValue(obj)
+    else:
+        # all ModelValue types
+        mVs = tuple(getattr(ModelValue, i) for i in dir(ModelValue)
+                    if isinstance(getattr(ModelValue, i), type))
+        if isinstance(obj, mVs):
+            # Store type and string representation
+            val  = {
+                "type": obj.__class__.__name__,
+                "string": str(obj)
+            }
+            return val
     raise TypeError("Type {} is not supported for json output".format(type(obj).__name__))
 
 class XbrlSemanticJsonDatabaseConnection():
@@ -713,6 +724,14 @@ class XbrlSemanticJsonDatabaseConnection():
                                     u['divideMeasures'] = [qnameUri(qn) for qn in divs]
                     if fact.xmlLang is None and fact.concept is not None and fact.concept.baseXsdType is not None:
                         dataPoint['value'] = fact.xValue
+                        
+                        # # Can be useful for later processing to store value and datatype in one place
+                        # # regardless of the xmlLang
+                        # dataPoint['value'] = {
+                        #     "type": str(fact.concept.type.qname),
+                        #     "string": fact.stringValue
+                        # }
+
                         # The insert with base XSD type but no language
                     elif fact.xmlLang is not None:
                         # assuming string type with language
