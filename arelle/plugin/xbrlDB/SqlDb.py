@@ -395,6 +395,10 @@ class SqlDbConnection():
         for ddlFile in _ddlFiles:
             with io.open(ddlFile, 'rt', encoding='utf-8') as fh:
                 sql = fh.read().replace('%', '%%')
+            
+            # SQL server complains about 'GO' statement (SSMS artifact)
+            if self.product == 'mssql':
+                sql = sql.replace('\nGO\n', '\n')
             # separate dollar-quoted bodies and statement lines
             sqlstatements = []
             def findstatements(start, end, laststatement):
