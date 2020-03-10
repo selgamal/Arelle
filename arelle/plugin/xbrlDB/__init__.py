@@ -236,7 +236,7 @@ def xbrlDBdialogRssWatchValidateChoices(dialog, frame, row, *args, **kwargs):
     )
     
 def xbrlDBrssWatchHasWatchAction(rssWatchOptions, *args, **kwargs):
-    return rssWatchOptions.get("xbrlDBconnection") and rssWatchOptions.get("storeIntoXbrlDB")
+    return rssWatchOptions.get("xbrlDBconnection") and rssWatchOptions.get("storeIntoXbrlDb")
     
 def xbrlDBrssDoWatchAction(modelXbrl, rssWatchOptions, rssItem, *args, **kwargs):
     dbConnectionString = rssWatchOptions.get("xbrlDBconnection")
