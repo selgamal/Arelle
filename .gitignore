@@ -12,3 +12,7 @@ arelle/plugin/validate/DQC_test
 arelle/plugin/xule
 Arelle.egg-info
 .eggs
+.venv
+.vscode
+.arelleGUI_testing.pyw
+req.txt
