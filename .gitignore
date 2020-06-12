@@ -16,3 +16,4 @@ Arelle.egg-info
 .vscode
 .arelleGUI_testing.pyw
 req.txt
+arelle/plugin/validate/DQC.py
