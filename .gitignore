@@ -18,3 +18,5 @@ Arelle.egg-info
 req.txt
 arelle/plugin/validate/DQC.py
 .arelleCmdLine_test.py
+arelle/plugin/arellepy
+arelle/plugin/rssDB
