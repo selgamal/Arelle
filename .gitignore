@@ -13,6 +13,7 @@ arelle/plugin/xule
 Arelle.egg-info
 .eggs
 .venv
+.venv39
 .vscode
 .arelleGUI_testing.pyw
 req.txt
